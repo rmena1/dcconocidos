@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<HTML>
+   <HEAD>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+         crossorigin="" />
+      <TITLE>DCConocidos</TITLE>
+   </HEAD>
+   <BODY>
+      <h1>DCConocidos</h1>
+      {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+      {% endif %}
+      {% if user.is_authenticated %}
+         <p><a href="{% url 'user_manager:logout' %}">Logout</a></p>
+         <div id="myMap" style="height: 500px; width:70%;"></div>
+         <form action="{% url 'dcconocidos:add_spot' %}" method="post">
+            {% csrf_token %}
+            <p>Haz doble click en el mapa o ingresa coordenadas para agregar una ubicación</p>
+            <label for="lat">Latitud: </label>
+            <input type="text" name="lat" id="lat">
+            <label for="lnt">Longitud: </label>
+            <input type="text" name="lng" id="lng">
+
+            <input type="submit" value="Registrar ubicacion">
+         </form>
+
+         {% if locations %}
+            <h3> Tus ubicaciones </h3>
+            <ol>
+               {% for location in locations %}
+                     <li>{{ location.location_name }}, {{ location.longitude }}, {{ location.latitude }}</li>
+               {% endfor %}
+            </ol>
+         {% endif %}
+
+      {% else %}
+         <p><a href="{% url 'user_manager:register' %}">Registrarse</a></p>
+         <p><a href="{% url 'user_manager:login' %}">Login</a></p>
+
+      {% endif %}
+
+      <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+         integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+         crossorigin=""></script>
+      <script>
+         let myMap = L.map('myMap').setView([-33.498993886516175, -70.61490567393622], 15);
+
+         L.tileLayer(`https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png`, {
+            maxZoom: 18,
+         }).addTo(myMap);
+
+         var greenIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+          });
+
+          var redIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+          });
+
+         var marker;
+
+         myMap.doubleClickZoom.disable()
+         myMap.on('dblclick', e => {
+            let latLng = myMap.mouseEventToLatLng(e.originalEvent);
+
+            document.getElementById('lat').value = latLng.lat;
+            document.getElementById('lng').value = latLng.lng;
+
+            if(marker){
+               myMap.removeLayer(marker)
+            }
+
+            marker = L.marker([latLng.lat, latLng.lng], {icon: redIcon}).addTo(myMap)
+         });
+         
+      </script>
+   </BODY>
+</HTML>

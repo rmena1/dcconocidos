@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<HTML>
+   <HEAD>
+      <TITLE>DCConocidos</TITLE>
+   </HEAD>
+   <BODY>
+
+      {% if form.errors %}
+         <p> Hubo un error con su formulario de registro </p>
+      {% endif %}
+
+      <form action="{% url 'user_manager:register' %}" method="POST">
+        {% csrf_token %}
+        <fieldset>
+            <legend><h1>Registrarse</h1></legend>
+
+            {{ form.as_p }}
+
+        </fieldset>
+        <input type="submit" value="Send">
+    </form>
+   </BODY>
+</HTML>

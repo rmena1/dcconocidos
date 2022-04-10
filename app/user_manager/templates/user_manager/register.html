@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<HTML>
+   <HEAD>
+      <TITLE>DCConocidos</TITLE>
+   </HEAD>
+   <BODY>
+
+      {% if form.errors %}
+         <p> Hubo un error con su formulario de registro </p>
+      {% endif %}
+
+      <form action="{% url 'user_manager:register' %}" method="POST">
+        {% csrf_token %}
+        <fieldset>
+            <legend><h1>Registrarse</h1></legend>
+
+            <div class="form-field">
+                {{form.first_name.label_tag}}
+                {{form.first_name}}
+            </div>
+            <div class="form-field">
+                {{form.last_name.label_tag}}
+                {{form.last_name}}
+            </div>
+            <div class="form-field">
+                {{form.username.errors}}
+                {{form.username.label_tag}}
+                {{form.username}}
+            </div>
+            <div class="form-field">
+                {{form.email.label_tag}}
+                {{form.email}}
+            </div>
+            <div class="form-field">
+                {{profile_form.address.label_tag}}
+                {{profile_form.address}}
+            </div>
+            <div class="form-field">
+                {{profile_form.phone_number.label_tag}}
+                {{profile_form.phone_number}}
+            </div>
+            <div class="form-field">
+                {{form.password1.errors}}
+                {{form.password1.label_tag}}
+                {{form.password1}}
+            </div>
+            <div class="form-field">
+                {{form.password2.errors}}
+                {{form.password2.label_tag}}
+                {{form.password2}}
+            </div>
+
+        </fieldset>
+        <input type="submit" value="Send">
+    </form>
+   </BODY>
+</HTML>

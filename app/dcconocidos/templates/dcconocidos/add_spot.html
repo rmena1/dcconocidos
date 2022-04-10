@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<HTML>
+   <HEAD>
+      <TITLE>DCConocidos</TITLE>
+   </HEAD>
+   <BODY>
+       {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+       {% endif %}
+      <form action="{% url 'dcconocidos:create_new_location' %}" method="post">
+        {% csrf_token %}
+        <fieldset>
+            <legend><h1>Crear nueva ubicacion</h1></legend>
+
+            <label for="name"> Nombre ubicacion: </label>
+            <input type="text" name="loc_name">
+            
+            <input type="text" name="lat" value="{{ lat }}">
+            <input type="text" name="lng" value="{{ lng }}">
+
+        </fieldset>
+        <input type="submit" value="Guardar">
+    </form>
+   </BODY>
+</HTML>
