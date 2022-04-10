@@ -5,9 +5,11 @@ from .models import Location
 def index(request):
     if request.user.is_authenticated:
         locations = request.user.location_set.all()
+        other_locations = Location.objects.exclude(user=request.user)
     else:
         locations = None
-    return render(request, 'dcconocidos/index.html', {'locations': locations})
+        other_locations = None
+    return render(request, 'dcconocidos/index.html', {'locations': locations, 'other_locations':other_locations})
 
 def add_spot(request):
     if request.method == 'POST':

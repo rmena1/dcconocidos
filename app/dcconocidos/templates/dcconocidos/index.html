@@ -18,6 +18,11 @@
       {% endif %}
       {% if user.is_authenticated %}
          <p><a href="{% url 'user_manager:logout' %}">Logout</a></p>
+
+         <p>Verde: Ubicaciones de otros usuarios</p>
+         <p>Azul: Tus ubicaciones</p>
+         <p>Rojo: Nueva ubicación (doble click para agregar)</p>
+
          <div id="myMap" style="height: 500px; width:70%;"></div>
          <form action="{% url 'dcconocidos:add_spot' %}" method="post">
             {% csrf_token %}
@@ -88,6 +93,22 @@
 
             marker = L.marker([latLng.lat, latLng.lng], {icon: redIcon}).addTo(myMap)
          });
+
+         {% if locations %}
+            {% for location in locations %}
+               var marker_location;
+               marker_location = L.marker(["{{ location.latitude }}", "{{ location.longitude }}"], {}).addTo(myMap);
+
+            {% endfor %}
+         {% endif %}
+
+         {% if other_locations %}
+            {% for location in other_locations %}
+               var marker_other_location;
+               marker_other_location = L.marker(["{{ location.latitude }}", "{{ location.longitude }}"], {icon:greenIcon}).addTo(myMap);
+
+            {% endfor %}
+         {% endif %}
          
       </script>
    </BODY>
